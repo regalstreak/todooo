@@ -23,7 +23,6 @@ ref = db.reference('todoooapp')
 
 import re
 import os
-import glob
 
 # Script start
 """
@@ -97,6 +96,7 @@ tempnotabline = ""
 appname = ""
 fullpath = ""
 todo=""
+nimp = ""
 
 # Set root directory
 rootdir=('/home/regalstreak/android/apps')
@@ -126,10 +126,28 @@ for folder, dirs, files in os.walk(rootdir):
                             notabline = tempnotabline
                         print(notabline)
 
-                        match = re.search(r"^TODO", notabline)
+                        # All todo shit
+                        match1 = re.search(r"^TODO", notabline)
 
-                        if match is not None:
-                            todo = match.group(0)
+                        if match1 is not None:
+                            todo = match1.group(0)
 
                         if todo:
                             print(todo)
+                            # add this to the database
+
+                        # All nimp shit
+                        match2 = re.search(r"^\*\*NIMP\*\*", notabline)
+
+                        if match2 is not None:
+                            nimp = match2.group(0)
+
+                        if nimp is not None:
+                            print(nimp)
+                            # add this to the database
+
+                        # Destructor lmao
+                        nimp = None
+                        todo = None
+
+
