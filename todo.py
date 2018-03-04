@@ -98,6 +98,8 @@ fullpath = ""
 todo=""
 nimp = ""
 date = ""
+todotext = ""
+nimptext = ""
 
 # Set root directory
 rootdir=('/home/regalstreak/android/apps')
@@ -139,6 +141,8 @@ for folder, dirs, files in os.walk(rootdir):
 
                         if todo:
                             print(todo)
+                            todotext = re.sub(r'(TODO: \d+\/\d+\/\d+ )', '', notabline)
+                            print(todotext)
                             # add this to the database
 
                         # All nimp shit
@@ -149,8 +153,12 @@ for folder, dirs, files in os.walk(rootdir):
 
                         if nimp is not None:
                             print(nimp)
+                            nimptext = re.sub(r'(\*\*NIMP\*\* TODO: \d+\/\d+\/\d+ )', '', notabline)
+                            print(nimptext)
                             # add this to the database
 
                         # Destructor lmao
                         nimp = None
                         todo = None
+                        todotext = ""
+                        nimptext = ""
