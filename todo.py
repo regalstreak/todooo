@@ -97,6 +97,7 @@ appname = ""
 fullpath = ""
 todo=""
 nimp = ""
+date = ""
 
 # Set root directory
 rootdir=('/home/regalstreak/android/apps')
@@ -126,6 +127,10 @@ for folder, dirs, files in os.walk(rootdir):
                             notabline = tempnotabline
                         print(notabline)
 
+                        # Get the date
+                        date = re.search("(\d+\/\d+\/\d+)", notabline).group(0)
+                        print(date)
+
                         # All todo shit
                         match1 = re.search(r"^TODO", notabline)
 
@@ -149,5 +154,3 @@ for folder, dirs, files in os.walk(rootdir):
                         # Destructor lmao
                         nimp = None
                         todo = None
-
-
