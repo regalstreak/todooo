@@ -24,72 +24,6 @@ ref = db.reference('todoooapp')
 import re
 import os
 
-# Script start
-"""
-def ourfn(searchfile):
-
-    # Define some vars
-    rawtext = ""
-    replacedtext = ""
-    fulllist = []
-    todolist = []
-    nimplist = []
-
-    # Open WallpaperStuff.java and find all TODO Lines
-    searchfile = open(searchfile, "r")
-
-    for line in searchfile:
-            if "TODO" in line: rawtext += line
-    searchfile.close()
-
-    print(rawtext)
-
-    print("Replacing shit now ...\n")
-
-    replacedtext = re.sub(r'(^[ \t]+//\s+)', '', rawtext, flags=re.M)
-    print(replacedtext)
-///////////////
-    print("Converting to array now... \n")
-    fulllist = replacedtext.splitlines()
-    print(fulllist)
-
-    print("\nTODO LIST\n")
-
-    r=re.compile("^TODO")
-    todolist = filter(r.match, fulllist)
-    print(list(todolist))
-
-    print("\nNIMP LIST:\n")
-
-    r=re.compile("^\*\*NIMP")
-    nimplist = filter(r.match, fulllist)
-    print(list(nimplist))
-
-
-ourfn("WallpaperStuff.java")
-
-print("\n")
-print("\n")
-
-
-folders = glob.glob('/home/regalstreak/android/apps/*')
-print(folders)
-
-print("\nString format:\n")
-str1 = '\n'.join(folders)
-print(str1)
-
-print("\n")
-appname = re.sub(r'/home/regalstreak/android/apps/', '', str1, flags=re.M)
-print(appname)
-
-print("Converting to array now... \n")
-applist = appname.splitlines()
-print(applist)
-
-print("\n\n\n\n")
-"""
-
 # Define vars
 notabline = ""
 tempnotabline = ""
@@ -100,6 +34,7 @@ nimp = ""
 date = ""
 todotext = ""
 nimptext = ""
+filename = ""
 
 # Set root directory
 rootdir=('/home/regalstreak/android/apps')
@@ -122,6 +57,10 @@ for folder, dirs, files in os.walk(rootdir):
                         print(appname + "\n")
 
                         print(line)
+
+                        # Filename
+                        filename = re.search("([^\/]+$)", fullpath).group(0)
+                        print(filename)
 
                         # Remove tabs and shit
                         tempnotabline = re.sub(r'(^[ \t]+\/\/\s+)', '', line)
