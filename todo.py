@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
-"""
+import re
+import os
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
@@ -14,15 +15,11 @@ firebase_admin.initialize_app(cred, {
     'databaseURL': 'https://todooo-c0d86.firebaseio.com/'
 })
 
+# Put it in the database
+ref.set("")
+
 # As an admin, the app has access to read and write all data, regradless of Security Rules
 ref = db.reference('todoooapp')
-
-# Put it in the database
-#ref.set("")
-"""
-
-import re
-import os
 
 # Define vars
 notabline = ""
