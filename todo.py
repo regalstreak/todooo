@@ -15,11 +15,10 @@ firebase_admin.initialize_app(cred, {
     'databaseURL': 'https://todooo-c0d86.firebaseio.com/'
 })
 
-# Put it in the database
-ref.set("")
-
 # As an admin, the app has access to read and write all data, regradless of Security Rules
 ref = db.reference('todoooapp')
+ref.set('todoooapp')
+#todo_ref = ref.push()
 
 # Define vars
 notabline = ""
@@ -60,7 +59,7 @@ for folder, dirs, files in os.walk(rootdir):
                         print(filename)
 
                         # Remove tabs and shit
-                        tempnotabline = re.sub(r'(^[ \t]+\/\/\s+)', '', line)
+                        tempnotabline = re.sub(r'(^[ \t]*\/\/\s+)', '', line)
                         if tempnotabline:
                             notabline = tempnotabline
                         print(notabline)
@@ -79,7 +78,14 @@ for folder, dirs, files in os.walk(rootdir):
                             print(todo)
                             todotext = re.sub(r'(TODO: \d+\/\d+\/\d+ )', '', notabline)
                             print(todotext)
-                            # add this to the database
+
+                            ref.push({
+                                appname: {
+                                    'date_of_birth': todotext,
+                                    'full_name': 'g'
+                                }
+                            })
+
 
                         # All nimp shit
                         match2 = re.search(r"^\*\*NIMP\*\*", notabline)
