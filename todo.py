@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 
-import re
 import os
+import re
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
 
 # Firebase-Admin Setup
 # Fetch the service account key JSON file contents
-cred = credentials.Certificate("/home/regalstreak/.ssh/todooo-c0d86-firebase-adminsdk-nv2dj-3f19dffda0.json")
+cred = credentials.Certificate("/home/regalstreak/.ssh/todooo-c0d86.json")
 
 # Initialize the app with a service account, granting admin privileges
 firebase_admin.initialize_app(cred, {
@@ -18,14 +18,14 @@ firebase_admin.initialize_app(cred, {
 # As an admin, the app has access to read and write all data, regradless of Security Rules
 ref = db.reference('todoooapp')
 ref.set('todoooapp')
-#todo_ref = ref.push()
 
+# Script Start
 # Define vars
 notabline = ""
 tempnotabline = ""
 appname = ""
 fullpath = ""
-todo=""
+todo = ""
 nimp = ""
 date = ""
 todotext = ""
@@ -34,7 +34,6 @@ filename = ""
 
 # Set root directory
 rootdir=('/home/regalstreak/android/apps')
-
 
 # Start looping. Find all files with .java extension, find if TODO is there
 for folder, dirs, files in os.walk(rootdir):
@@ -59,9 +58,9 @@ for folder, dirs, files in os.walk(rootdir):
                         print(filename)
 
                         # Remove tabs and shit
-                        tempnotabline = re.sub(r'(^[ \t]*\/\/\s+)', '', line)
+                        tempnotabline = re.sub(r'((^[ \t]*\/\/\s+)*)', '', line)
                         if tempnotabline:
-                            notabline = tempnotabline
+                            notabline = tempnotabline.rstrip()
                         print(notabline)
 
                         # Get the date
@@ -69,38 +68,43 @@ for folder, dirs, files in os.walk(rootdir):
                         print(date)
 
                         # All todo shit
-                        match1 = re.search(r"^TODO", notabline)
+                        match1 = re.search(r"^(TODO)", notabline)
 
                         if match1 is not None:
                             todo = match1.group(0)
 
                         if todo:
                             print(todo)
-                            todotext = re.sub(r'(TODO: \d+\/\d+\/\d+ )', '', notabline)
-                            print(todotext)
+                            todotext = re.sub(r'(^(TODO: \d+\/\d+\/\d+ ))', '', notabline)
+                            print("todotext = " + todotext)
 
-                            ref.push({
-                                appname: {
-                                    'date_of_birth': todotext,
-                                    'full_name': 'g'
-                                }
+                            # Push this to the database (creates id so no worriez)
+                            our_ref = ref.push({
+                                'app': appname,
+                                'file': filename,
+                                'todo': todotext,
+                                'date': date
                             })
 
-
                         # All nimp shit
-                        match2 = re.search(r"^\*\*NIMP\*\*", notabline)
+                        match2 = re.search(r"^(N)", notabline)
 
                         if match2 is not None:
                             nimp = match2.group(0)
 
-                        if nimp is not None:
+                        if nimp:
                             print(nimp)
-                            nimptext = re.sub(r'(\*\*NIMP\*\* TODO: \d+\/\d+\/\d+ )', '', notabline)
-                            print(nimptext)
-                            # add this to the database
+                            nimptext = re.sub(r'(^(N TODO: \d+\/\d+\/\d+ ))', '', notabline)
+                            print("nimptext = " + nimptext)
+
+                            # Push this shit to database too
+                            our_ref.update({
+                                'nimp': nimptext
+                            })
 
                         # Destructor lmao
                         nimp = None
                         todo = None
                         todotext = ""
                         nimptext = ""
+                        notabline = ""
