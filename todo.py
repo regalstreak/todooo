@@ -31,6 +31,7 @@ date = ""
 todotext = ""
 nimptext = ""
 filename = ""
+ourkey = ""
 
 # Set root directory
 rootdir=('/home/regalstreak/android/apps')
@@ -86,6 +87,10 @@ for folder, dirs, files in os.walk(rootdir):
                                 'date': date
                             })
 
+                            ourkey = our_ref.key
+
+                        print(ourkey)
+
                         # All nimp shit
                         match2 = re.search(r"^(N)", notabline)
 
@@ -97,10 +102,20 @@ for folder, dirs, files in os.walk(rootdir):
                             nimptext = re.sub(r'(^(N TODO: \d+\/\d+\/\d+ ))', '', notabline)
                             print("nimptext = " + nimptext)
 
-                            # Push this shit to database too
-                            our_ref.update({
-                                'nimp': nimptext
-                            })
+                            if todo:
+                                # Push this shit to database too
+                                our_ref.update({
+                                    'nimp': nimptext
+                                })
+                            else:
+                                # Push this to the database (creates id so no worriez)
+                                our_ref = ref.push({
+                                    'app': appname,
+                                    'file': filename,
+                                    'nimp': nimptext,
+                                    'date': date
+                                })
+
 
                         # Destructor lmao
                         nimp = None
@@ -108,3 +123,5 @@ for folder, dirs, files in os.walk(rootdir):
                         todotext = ""
                         nimptext = ""
                         notabline = ""
+
+#print(ref.get())
