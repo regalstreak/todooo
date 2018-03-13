@@ -2,6 +2,7 @@
 
 import os
 import re
+import pickle
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
@@ -32,9 +33,17 @@ todotext = ""
 nimptext = ""
 filename = ""
 ourkey = ""
+keylisttodo = []
+keylistntodo = []
+i = 0
+j = 0
+databasefile = 'test.data'
 
 # Set root directory
 rootdir=('/home/regalstreak/android/apps')
+
+# Open databasefile
+fw = open(databasefile, 'wb')
 
 # Start looping. Find all files with .java extension, find if TODO is there
 for folder, dirs, files in os.walk(rootdir):
@@ -79,6 +88,14 @@ for folder, dirs, files in os.walk(rootdir):
                             todotext = re.sub(r'(^(TODO: \d+\/\d+\/\d+ ))', '', notabline)
                             print("todotext = " + todotext)
 
+                            # Get data from ref
+                            """
+                            print(keylistpop)
+                            print(keylistpop[i])
+                            print(i)
+                            i += 1
+                            """
+
                             # Push this to the database (creates id so no worriez)
                             our_ref = ref.push({
                                 'app': appname,
@@ -87,7 +104,7 @@ for folder, dirs, files in os.walk(rootdir):
                                 'date': date
                             })
 
-                            ourkey = our_ref.key
+                            keylisttodo.append(our_ref.key)
 
                         print(ourkey)
 
@@ -107,6 +124,7 @@ for folder, dirs, files in os.walk(rootdir):
                                 our_ref.update({
                                     'nimp': nimptext
                                 })
+
                             else:
                                 # Push this to the database (creates id so no worriez)
                                 our_ref = ref.push({
@@ -116,6 +134,7 @@ for folder, dirs, files in os.walk(rootdir):
                                     'date': date
                                 })
 
+                                keylistntodo.append(our_ref.key)
 
                         # Destructor lmao
                         nimp = None
@@ -124,4 +143,11 @@ for folder, dirs, files in os.walk(rootdir):
                         nimptext = ""
                         notabline = ""
 
-#print(ref.get())
+
+print("keylisttodo ======== ")
+pickle.dump(keylisttodo, fw)
+print(keylisttodo)
+print("keylistntodo ========== ")
+pickle.dump(keylistntodo, fw)
+print(keylistntodo)
+fw.close()
